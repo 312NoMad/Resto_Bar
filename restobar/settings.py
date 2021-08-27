@@ -42,9 +42,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
 
-    'account',
-    'order',
-    'product',
+    'users',
+    'products',
 ]
 
 MIDDLEWARE = [
@@ -83,12 +82,12 @@ WSGI_APPLICATION = 'restobar.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'restobar',
         'USER': 'hello',
         'PASSWORD': '1',
         'HOST':'localhost',
-        'PORT':'5432'
+        'PORT':'5432',
     }
 }
 
