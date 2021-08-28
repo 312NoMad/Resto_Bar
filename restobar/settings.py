@@ -20,13 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-sqdr6c=qy3f=3kmbau^1b)zi^*$fc)#i94ty*jcd-x+@6un6%z'
+SECRET_KEY = 'hjsfcdshfjsdfjhfh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+CART_SESSION_ID = 'cart'
 
 # Application definition
 
@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
 
-    'account',
-    'order',
-    'product',
+    'users',
+    'products',
+    'cart'
 ]
 
 MIDDLEWARE = [
@@ -70,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart.context_processors.cart'
             ],
         },
     },
@@ -85,8 +86,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'restobar',
-        'USER': 'hello',
-        'PASSWORD': '1',
+        'USER': 'gulburak',
+        'PASSWORD': '1234',
         'HOST':'localhost',
         'PORT':'5432'
     }
