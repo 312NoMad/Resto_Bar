@@ -1,35 +1,18 @@
-from django.http import HttpResponse
-
-from django.shortcuts import render
 from rest_framework import viewsets, mixins
 
-from rest_framework.decorators import api_view, action
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
-from product.models import Product, ProductReview
-from product.permissions import IsAuthorOrIsAdmin
-from product.serializers import (ProductSerializer, ProductDetailsSerializer, CreateProductSerializer, ReviewSerializer)
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django_filters import rest_framework as filters
 from rest_framework import filters as rest_filters
-def test_view(request):
-    return HttpResponse('hello world')
-class ProductFilter(filters.FilterSet):
-    price_from = filters.NumberFilter('price', 'gte')
-    price_to = filters.NumberFilter('price', 'lte')
-
-    class Meta:
-        model = Products
-        fields = ('price_from', 'price_to')
-
+from .models import Product, ProductReview
+from .serializers import ProductSerializer, CreateProductSerializer, ProductDetailsSerializer, ReviewSerializer
+from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from .models import Product, Like
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
-    filter_backends = [filters.DjangoFilterBackend, rest_filters.SearchFilter, rest_filters.OrderingFilter]
-
-    filterset_class = ProductFilter
-    search_fields = ['title', 'description']
-    ordering_fields = ['title', 'price']
+    filter_backends = [filters.DjangoFilterBackend,
+                       rest_filters.SearchFilter,
+                       rest_filters.OrderingFilter]
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -38,26 +21,40 @@ class ProductViewSet(viewsets.ModelViewSet):
             return ProductDetailsSerializer
         return CreateProductSerializer
 
-    def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [IsAdminUser()]
-        return []
 
-    @action(['GET'], detail=True)
-    def reviews(self, request, pk=None):
-        product = self.get_object()
-
-        reviews = product.reviews.all()
-        serializer = ReviewSerializer(reviews, many=True)
-        return Response(serializer.data, status=200)
-class ReviewViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
-    queryset = Product.objects.all()
+class ReviewViewSet(mixins.CreateModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin,
+                    viewsets.GenericViewSet):
+    queryset = ProductReview.objects.all()
     serializer_class = ReviewSerializer
 
-    def get_permissions(self):
-        if self.action == 'create':
-            return [IsAuthenticated()]
-        elif self.action in ['update', 'partial_update', 'destroy']:
-            return [IsAuthenticated(), IsAuthorOrIsAdmin()]
-        return []
+def post_view(request):
+    queryset = Product.objects.all()
+    user = request.user
+    context = {
+        'queryset': queryset,
+        'user': user,
+    }
+    return render(request)
+def like_post(request):
+    user = request.user
+    if request.method == 'POST':
+        products_id = request.POST.get('post_id')
+        product_obj = Product.objects.get(id=products_id)
+
+        if user in products_id.liked.all():
+            product_obj.liked.remove(user)
+        else:
+            product_obj.liked.add(user)
+        like, created = Like.objects.get_or_create(user=user, products_id=products_id)
+        if not created:
+            if like.value == 'Like':
+               like.value == 'Unlike'
+            else:
+               like.value = 'Like'
+        like.save()
+
+
+
 

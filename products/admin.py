@@ -1,5 +1,7 @@
 from django.contrib import admin
-from products.models import Products
+from .models import Products, Like
 
 admin.site.register(Products)
+admin.site.register(Like)
+
 
