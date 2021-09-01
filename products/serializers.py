@@ -5,7 +5,7 @@ from .models import Product, ProductReview
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('id', 'title', 'price')
+        fields = ('title', 'price')
 
 
 class ProductDetailsSerializer(serializers.ModelSerializer):
@@ -24,11 +24,6 @@ class CreateProductSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Цена не может быть отрицательной')
         return price
 
-
-class ProductDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ('id', 'title', 'description', 'price', 'image')
 
 
 class ReviewSerializer(serializers.ModelSerializer):
