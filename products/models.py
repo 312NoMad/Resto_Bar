@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from restobar.restaurants.models import Restaurant
 
 User = get_user_model()
 
@@ -13,11 +12,6 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products',
                               null=True,
                               blank=True)
-    likes = models.DecimalField(max_digits=10, decimal_places=0, null=True)
-    restaurant = models.ForeignKey(Restaurant,
-                                   on_delete=models.CASCADE,
-                                   related_name='restaurant'
-                                   )
 
     class Meta:
         ordering = ['title', 'price']
@@ -35,8 +29,6 @@ class ProductReview(models.Model):
                                related_name='author')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    likes = Like.objects.count(Like.product == product and Like.value == 'like')
-    dislikes = Like.objects.count(Like.product == product and Like.value == 'dislike')
 
     def __str__(self):
         return f'{self.author} >>> {self.text}'
@@ -46,6 +38,7 @@ LIKE_CHOICES = (
     ('like', 'like'),
     ('dislike', 'dislike'),
 )
+
 
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'products',
 ]
 
+AUTH_USER_MODEL = 'users.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -83,7 +85,7 @@ WSGI_APPLICATION = 'restobar.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'restobar',
+        'NAME': 'last',
         'USER': 'hello',
         'PASSWORD': '1',
         'HOST':'localhost',
