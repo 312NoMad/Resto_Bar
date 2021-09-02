@@ -5,7 +5,22 @@ from django.db import models
 User = get_user_model()
 
 
+class Restaurant(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    address = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ['title', 'address']
+
+    def __str__(self):
+        return f'{self.title} >>> {self.address}'
+
+
 class Product(models.Model):
+    restaurant = models.ForeignKey(Restaurant,
+                                   on_delete=models.CASCADE,
+                                   related_name='products')
     title = models.CharField(max_length=100,)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -18,6 +33,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+    # @property
+    # def total_likes(self):
+    #     return self.likes.count()
 
 
 class ProductReview(models.Model):
@@ -41,9 +60,32 @@ LIKE_CHOICES = (
 
 
 class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    value = models.CharField(choices=LIKE_CHOICES, default=None, max_length=10)
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             )
+    product = models.ForeignKey(Product,
+                                on_delete=models.CASCADE,
+                                )
+    value = models.CharField(choices=LIKE_CHOICES,
+                             default=None,
+                             max_length=10)
 
     def __str__(self):
         return f'{self.product} has {self.value} from {self.user}'
+
+
+class Favourite(models.Model):
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name='favourites')
+    product = models.ForeignKey(Product,
+                                on_delete=models.CASCADE,
+                                related_name='favourites')
+    is_favourite = models.BooleanField(default=False)
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        if self.is_favourite:
+            return f'{self.user} >>> {self.product} '
