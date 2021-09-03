@@ -50,7 +50,7 @@ class ProductReview(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.author} >>> {self.text}'
+        return f'{self.author} >>> {self.product} >>> {self.text}'
 
 
 LIKE_CHOICES = (
@@ -65,13 +65,12 @@ class Like(models.Model):
                              )
     product = models.ForeignKey(Product,
                                 on_delete=models.CASCADE,
+                                related_name='likes'
                                 )
-    value = models.CharField(choices=LIKE_CHOICES,
-                             default=None,
-                             max_length=10)
+    liked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.product} has {self.value} from {self.user}'
+        return f'{self.product} has {self.liked} from {self.user}'
 
 
 class Favourite(models.Model):

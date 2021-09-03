@@ -5,7 +5,7 @@ from .models import Product, ProductReview
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('title', 'price')
+        fields = ('title', 'restaurant', 'price', 'likes', 'reviews')
 
 
 class ProductDetailsSerializer(serializers.ModelSerializer):
@@ -31,7 +31,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductReview
-        fields = ('id', 'author', 'product', 'text', 'rating', 'created_at')
+        fields = ('id', 'author', 'product', 'text', 'created_at')
 
     def create(self, validated_data):
         request = self.context.get('request')
