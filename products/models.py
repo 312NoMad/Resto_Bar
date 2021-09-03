@@ -34,10 +34,6 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
-    # @property
-    # def total_likes(self):
-    #     return self.likes.count()
-
 
 class ProductReview(models.Model):
     product = models.ForeignKey(Product,
@@ -45,7 +41,7 @@ class ProductReview(models.Model):
                                 related_name='reviews')
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE,
-                               related_name='author')
+                               related_name='reviews')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -65,12 +61,12 @@ class Like(models.Model):
                              )
     product = models.ForeignKey(Product,
                                 on_delete=models.CASCADE,
-                                related_name='likes'
+                                related_name='likes',
                                 )
     liked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.product} has {self.liked} from {self.user}'
+        return f'{self.product} was liked by {self.user}'
 
 
 class Favourite(models.Model):

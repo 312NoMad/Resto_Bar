@@ -6,8 +6,9 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
-from .models import Product, ProductReview
-from .serializers import ProductSerializer, CreateProductSerializer, ProductDetailsSerializer, ReviewSerializer
+from .models import Product, ProductReview, Restaurant, Favourite, Like
+from .serializers import ProductSerializer, CreateProductSerializer, ProductDetailsSerializer, ReviewSerializer, \
+    RestaurantSerializer, FavouriteSerializer, LikeSerializer
 
 
 class ProductFilter(filters.FilterSet):
@@ -60,6 +61,16 @@ class ReviewViewSet(mixins.CreateModelMixin,
     serializer_class = ReviewSerializer
 
 
+class RestaurantViewSet(viewsets.ModelViewSet):
+    queryset = Restaurant.objects.all()
+    serializer_class = RestaurantSerializer
 
 
+class FavouriteViewSet(viewsets.ModelViewSet):
+    queryset = Favourite.objects.all()
+    serializer_class = FavouriteSerializer
 
+
+class LikeViewSet(viewsets.ModelViewSet):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
